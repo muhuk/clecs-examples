@@ -1,8 +1,8 @@
 (defproject clecs-example-rougelike "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :license {:name "GNU GPL v3"
+            :url "http://www.gnu.org/licenses/gpl-3.0.en.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [clecs "0.2.0"]
                  [clojure-lanterna "0.9.4"]
