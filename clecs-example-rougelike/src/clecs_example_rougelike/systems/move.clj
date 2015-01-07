@@ -1,5 +1,5 @@
 (ns clecs-example-rougelike.systems.move
-  (:require [clecs.component :refer [component-label]]
+  (:require [clecs.query :as query]
             [clecs.world :as w]
             [clecs-example-rougelike.components :refer [->Location
                                                         Location
@@ -7,7 +7,13 @@
                                                         Walkable]]))
 
 
-(declare q-movers q-walkables walkable?)
+(declare walkable?)
+
+
+(def ^:private q-movers (query/all MoveIntent Location))
+
+
+(def ^:private q-walkables (query/all Walkable Location))
 
 
 (defn- displace [x y direction]
@@ -29,16 +35,6 @@
                         (when (walkable? world x y)
                           (w/set-component world (->Location eid x y)))
                         (w/remove-component world eid MoveIntent))))))
-
-
-(defn- q-movers [clabels]
-  (and (some #{(component-label MoveIntent)} clabels)
-       (some #{(component-label Location)} clabels)))
-
-
-(defn- q-walkables [clabels]
-  (and (some #{(component-label Walkable)} clabels)
-       (some #{(component-label Location)} clabels)))
 
 
 (defn- walkable? [world x y]

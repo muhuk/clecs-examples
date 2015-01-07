@@ -1,5 +1,5 @@
 (ns clecs-example-rougelike.systems.take
-  (:require [clecs.component :refer [component-label]]
+  (:require [clecs.query :as query]
             [clecs.world :as w]
             [clecs-example-rougelike.components :refer [->Inventory
                                                         Location
@@ -8,7 +8,10 @@
             [clecs-example-rougelike.entities :refer [find-entities-at]]))
 
 
-(declare q-takeable q-takers)
+(def ^:private q-takeable (query/all Takeable Location))
+
+
+(def ^:private q-takers (query/all TakeIntent Location))
 
 
 (defn take-system [world dt]
@@ -26,13 +29,3 @@
                            (doto world
                              (w/remove-component takeable-eid Location)
                              (w/set-component (->Inventory takeable-eid)))))))))
-
-
-(defn- q-takeable [clabels]
-  (and (some #{(component-label Takeable)} clabels)
-       (some #{(component-label Location)} clabels)))
-
-
-(defn- q-takers [clabels]
-  (and (some #{(component-label TakeIntent)} clabels)
-       (some #{(component-label Location)} clabels)))

@@ -1,13 +1,12 @@
 (ns clecs-example-rougelike.systems.input
   (:require [clecs.world :as w]
-            [clecs.component :refer [component-label]]
-            [lanterna.screen :as s]
             [clecs-example-rougelike.components :refer [->MoveIntent
                                                         ->TakeIntent
                                                         MoveIntent
                                                         Renderable
                                                         TakeIntent]]
-            [clecs-example-rougelike.entities :refer [tagged-entities]]))
+            [clecs-example-rougelike.entities :refer [tagged-entities]]
+            [lanterna.screen :as s]))
 
 
 (defn- get-inputs! [inputs screen]

@@ -1,6 +1,6 @@
 (ns clecs-example-rougelike.systems.rendering
   (:require [lanterna.screen :as s]
-            [clecs.component :refer [component-label]]
+            [clecs.query :as query]
             [clecs.world :as w]
             [clecs-example-rougelike.components :refer :all]
             [clecs-example-rougelike.entities :refer [find-entities-at
@@ -24,7 +24,19 @@
               :wall {:glyph "#" :fg :white :bg :black :z-order 999}})
 
 
-(declare q-inventory q-named q-renderables q-takeable render-entities)
+(declare render-entities)
+
+
+(def ^:private q-inventory (query/all Inventory Name))
+
+
+(def ^:private q-named (query/all Name Location))
+
+
+(def ^:private q-renderables (query/all Renderable Location))
+
+
+(def ^:private q-takeable (query/all Takeable Location))
 
 
 (defn- clear-screen [screen]
@@ -143,23 +155,3 @@
             (render-side-panel world screen))
           (s/put-string screen 1 1 (str "You must resize window to at least " min-width "x" min-height "."))))
       (s/redraw screen))))
-
-
-(defn- q-inventory [clabels]
-  (and (some #{(component-label Inventory)} clabels)
-       (some #{(component-label Name)} clabels)))
-
-
-(defn- q-named [clabels]
-  (and (some #{(component-label Name)} clabels)
-       (some #{(component-label Location)} clabels)))
-
-
-(defn- q-renderables [clabels]
-  (and (some #{(component-label Renderable)} clabels)
-       (some #{(component-label Location)} clabels)))
-
-
-(defn- q-takeable [clabels]
-  (and (some #{(component-label Takeable)} clabels)
-       (some #{(component-label Location)} clabels)))
