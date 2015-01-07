@@ -1,9 +1,11 @@
 (ns clecs-example-rougelike.systems.take
   (:require [clecs.component :refer [component-label]]
             [clecs.world :as w]
-            [clecs-example-rougelike.components :refer [->Inventory]]
-            [clecs-example-rougelike.entities :refer [find-entities-at]])
-  (:import [clecs_example_rougelike.components Location Takeable TakeIntent]))
+            [clecs-example-rougelike.components :refer [->Inventory
+                                                        Location
+                                                        Takeable
+                                                        TakeIntent]]
+            [clecs-example-rougelike.entities :refer [find-entities-at]]))
 
 
 (declare q-takeable q-takers)

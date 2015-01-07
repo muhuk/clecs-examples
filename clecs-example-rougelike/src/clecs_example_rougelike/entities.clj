@@ -1,7 +1,6 @@
 (ns clecs-example-rougelike.entities
   (:require [clecs.world :as w]
-            [clecs-example-rougelike.components :refer :all])
-  (:import [clecs_example_rougelike.components Location]))
+            [clecs-example-rougelike.components :refer :all]))
 
 
 (def tagged-entities (atom {}))

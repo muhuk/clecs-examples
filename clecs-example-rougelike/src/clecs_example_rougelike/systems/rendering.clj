@@ -4,8 +4,7 @@
             [clecs.world :as w]
             [clecs-example-rougelike.components :refer :all]
             [clecs-example-rougelike.entities :refer [find-entities-at
-                                                      tagged-entities]])
-  (:import [clecs_example_rougelike.components Inventory Location Name Renderable Takeable]))
+                                                      tagged-entities]]))
 
 
 (def min-height 20)

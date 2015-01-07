@@ -1,8 +1,10 @@
 (ns clecs-example-rougelike.systems.move
   (:require [clecs.component :refer [component-label]]
             [clecs.world :as w]
-            [clecs-example-rougelike.components :refer [->Location]])
-  (:import [clecs_example_rougelike.components Location MoveIntent Walkable]))
+            [clecs-example-rougelike.components :refer [->Location
+                                                        Location
+                                                        MoveIntent
+                                                        Walkable]]))
 
 
 (declare q-movers q-walkables walkable?)
