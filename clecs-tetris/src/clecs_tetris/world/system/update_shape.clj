@@ -1,12 +1,12 @@
 (ns clecs-tetris.world.system.update-shape
   (:require [clecs-tetris.world.component :refer [->CurrentShapeComponent
                                                   ->GlassTileComponent
-                                                  ->TargetLocationComponent]]
+                                                  ->TargetLocationComponent
+                                                  CurrentShapeComponent
+                                                  GlassTileComponent
+                                                  TargetLocationComponent]]
             [clecs.query :as query]
-            [clecs.world :as world])
-  (:import (clecs_tetris.world.component CurrentShapeComponent
-                                         GlassTileComponent
-                                         TargetLocationComponent)))
+            [clecs.world :as world]))
 
 
 (defn -set-glass-tile [w x y tile]

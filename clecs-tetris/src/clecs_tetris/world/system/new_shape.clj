@@ -1,11 +1,11 @@
 (ns clecs-tetris.world.system.new-shape
   (:require [clecs-tetris.world.component :refer [->CurrentShapeComponent
-                                                  ->TargetLocationComponent]]
+                                                  ->TargetLocationComponent
+                                                  CurrentShapeComponent
+                                                  NextShapeComponent
+                                                  TargetLocationComponent]]
             [clecs.query :as query]
-            [clecs.world :as world])
-  (:import (clecs_tetris.world.component CurrentShapeComponent
-                                         NextShapeComponent
-                                         TargetLocationComponent)))
+            [clecs.world :as world]))
 
 
 (defn -can-create-new-shape? [w]

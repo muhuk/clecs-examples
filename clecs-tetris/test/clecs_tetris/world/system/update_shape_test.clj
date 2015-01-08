@@ -1,17 +1,17 @@
 (ns clecs-tetris.world.system.update-shape-test
   (:require [clecs-tetris.world.component :refer [->CurrentShapeComponent
                                                   ->GlassTileComponent
-                                                  ->TargetLocationComponent]]
+                                                  ->TargetLocationComponent
+                                                  CurrentShapeComponent
+                                                  GlassTileComponent
+                                                  TargetLocationComponent]]
             [clecs-tetris.world.system.update-shape :refer :all]
             [clecs.mock :refer [mock-component
                                 mock-query
                                 mock-set-component
                                 mock-world]]
             [clecs.query :as query]
-            [midje.sweet :refer :all])
-  (:import (clecs_tetris.world.component CurrentShapeComponent
-                                         GlassTileComponent
-                                         TargetLocationComponent)))
+            [midje.sweet :refer :all]))
 
 
 (fact "-set-glass-tile sets one tile."

@@ -3,11 +3,10 @@
             [clecs.world :as world]
             [clecs-tetris.world.component :refer [->CurrentShapeComponent
                                                   ->GlassTileComponent
-                                                  ->TargetLocationComponent]])
-  (:import [clecs_tetris.world.component
-            CurrentShapeComponent
-            GlassTileComponent
-            TargetLocationComponent]))
+                                                  ->TargetLocationComponent
+                                                  CurrentShapeComponent
+                                                  GlassTileComponent
+                                                  TargetLocationComponent]]))
 
 
 (declare -move-target-location)

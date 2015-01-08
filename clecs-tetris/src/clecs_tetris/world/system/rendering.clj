@@ -1,13 +1,12 @@
 (ns clecs-tetris.world.system.rendering
-  (:require [clecs-tetris.world.component]
+  (:require [clecs-tetris.world.component :refer [GlassTileComponent
+                                                  LevelComponent
+                                                  LinesDroppedComponent
+                                                  NextShapeComponent
+                                                  ScoreComponent]]
             [clecs-tetris.world.protocol :as protocol]
             [clecs.query :as query]
-            [clecs.world :as world])
-  (:import (clecs_tetris.world.component GlassTileComponent
-                                         LevelComponent
-                                         LinesDroppedComponent
-                                         NextShapeComponent
-                                         ScoreComponent)))
+            [clecs.world :as world]))
 
 
 (defn -get-next-shape [w]

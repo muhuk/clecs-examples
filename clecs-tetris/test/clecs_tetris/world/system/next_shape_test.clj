@@ -7,10 +7,10 @@
                                 mock-world]]
             [clecs.query :as query]
             [clecs.world :as world]
-            [clecs-tetris.world.component :refer [->NextShapeComponent]]
+            [clecs-tetris.world.component :refer [->NextShapeComponent
+                                                  NextShapeComponent]]
             [clecs-tetris.world.system.next-shape :refer :all]
-            [midje.sweet :refer :all])
-  (:import [clecs_tetris.world.component NextShapeComponent]))
+            [midje.sweet :refer :all]))
 
 
 (fact "-add-shape creates transaction that adds a new NextShapeComponent."

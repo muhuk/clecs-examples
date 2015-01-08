@@ -9,13 +9,12 @@
             [clecs.world :as world]
             [clecs-tetris.world.component :refer [->CurrentShapeComponent
                                                   ->NextShapeComponent
-                                                  ->TargetLocationComponent]]
+                                                  ->TargetLocationComponent
+                                                  CurrentShapeComponent
+                                                  NextShapeComponent
+                                                  TargetLocationComponent]]
             [clecs-tetris.world.system.new-shape :refer :all]
-            [midje.sweet :refer :all])
-  (:import [clecs_tetris.world.component
-            CurrentShapeComponent
-            NextShapeComponent
-            TargetLocationComponent]))
+            [midje.sweet :refer :all]))
 
 
 (fact "-can-create-new-shape? does nothing if there is a current shape."

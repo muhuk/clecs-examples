@@ -10,12 +10,12 @@
             [clecs.world :as world]
             [clecs-tetris.world.component :refer [->CurrentShapeComponent
                                                   ->GlassTileComponent
-                                                  ->TargetLocationComponent]]
+                                                  ->TargetLocationComponent
+                                                  CurrentShapeComponent
+                                                  GlassTileComponent
+                                                  TargetLocationComponent]]
             [clecs-tetris.world.system.gravity :refer :all]
-            [midje.sweet :refer :all])
-  (:import [clecs_tetris.world.component CurrentShapeComponent
-                                         GlassTileComponent
-                                         TargetLocationComponent]))
+            [midje.sweet :refer :all]))
 
 
 

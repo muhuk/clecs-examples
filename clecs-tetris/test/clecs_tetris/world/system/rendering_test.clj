@@ -8,15 +8,14 @@
                                                   ->LinesDroppedComponent
                                                   ->NextShapeComponent
                                                   ->ScoreComponent
-                                                  ->GlassTileComponent]]
+                                                  ->GlassTileComponent
+                                                  LevelComponent
+                                                  LinesDroppedComponent
+                                                  NextShapeComponent
+                                                  ScoreComponent
+                                                  GlassTileComponent]]
             [clecs-tetris.world.system.rendering :refer :all]
-            [midje.sweet :refer :all])
-  (:import [clecs_tetris.world.component
-            LevelComponent
-            LinesDroppedComponent
-            NextShapeComponent
-            ScoreComponent
-            GlassTileComponent]))
+            [midje.sweet :refer :all]))
 
 
 (fact "-get-next-shape returns 4x4 tile grid of next shape."

@@ -1,8 +1,8 @@
 (ns clecs-tetris.world.system.next-shape
-  (:require [clecs-tetris.world.component :refer [->NextShapeComponent]]
+  (:require [clecs-tetris.world.component :refer [->NextShapeComponent
+                                                  NextShapeComponent]]
             [clecs.query :as query]
-            [clecs.world :as world])
-  (:import (clecs_tetris.world.component NextShapeComponent)))
+            [clecs.world :as world]))
 
 
 (defn -add-shape [shape]
