@@ -1,11 +1,5 @@
 (ns clecs-tetris.world.system.gravity-test
-  (:require [clecs.mock :refer [mock-add-entity
-                                mock-component
-                                mock-query
-                                mock-remove-entity
-                                mock-set-component
-                                mock-transaction!
-                                mock-world]]
+  (:require [clecs.core :refer [make-world]]
             [clecs.query :as query]
             [clecs.world :as world]
             [clecs-tetris.world.component :refer [->CurrentShapeComponent
@@ -20,30 +14,28 @@
 
 
 (fact "-apply-gravity decrements countdown if it's still positive."
-             (-apply-gravity ..w.. 44 123 ..cd..) => 79)
+      (-apply-gravity ..w.. 44 123 ..cd..) => 79)
 
 
 (fact "-apply-gravity runs -move-target-location transaction and resets countdown."
-             (-apply-gravity mock-world 17 -3 ..cd..) => ..cd..
-             (provided (mock-transaction! -move-target-location) => anything))
+      (let [w (make-world identity)]
+        (-apply-gravity w 17 -3 ..cd..) => ..cd..
+        (provided (world/transaction! w -move-target-location) => anything)))
 
 
 (fact "-move-target-location does nothing if there's no current shape."
-      (-move-target-location mock-world) => nil
-      (provided (query/all TargetLocationComponent) => ..q..
-                (mock-query ..q..) => []))
+      (let [w (make-world identity)]
+        (-move-target-location w) => nil
+        (provided (query/all TargetLocationComponent) => ..q..
+                  (world/query w ..q..) => [])))
 
 
 (fact "-move-target-location moves target location down."
-      (-move-target-location mock-world) => nil
-      (provided (query/all TargetLocationComponent) => ..q..
-                (mock-query ..q..) => [..eid..]
-                (mock-component ..eid..
-                                TargetLocationComponent) => (->TargetLocationComponent ..eid..
-                                                                                       ..x..
-                                                                                       7
-                                                                                       ..ct..)
-                (mock-set-component (->TargetLocationComponent ..eid..
-                                                               ..x..
-                                                               6
-                                                               ..ct..)) => anything))
+      (let [w (make-world identity)
+            A (->TargetLocationComponent ..eid.. ..x.. 7 ..ct..)
+            B (->TargetLocationComponent ..eid.. ..x.. 6 ..ct..)]
+        (-move-target-location w) => nil
+        (provided (query/all TargetLocationComponent) => ..q..
+                  (world/query w ..q..) => [..eid..]
+                  (world/component w ..eid.. TargetLocationComponent) => A
+                  (world/set-component w B) => anything)))

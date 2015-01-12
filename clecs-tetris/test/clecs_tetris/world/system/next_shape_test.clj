@@ -1,10 +1,5 @@
 (ns clecs-tetris.world.system.next-shape-test
-  (:require [clecs.mock :refer [mock-add-entity
-                                mock-component
-                                mock-query
-                                mock-set-component
-                                mock-transaction!
-                                mock-world]]
+  (:require [clecs.core :refer [make-world]]
             [clecs.query :as query]
             [clecs.world :as world]
             [clecs-tetris.world.component :refer [->NextShapeComponent
@@ -14,21 +9,24 @@
 
 
 (fact "-add-shape creates transaction that adds a new NextShapeComponent."
-      ((-add-shape ..shape..) mock-world) => anything
-      (provided (mock-add-entity) => ..eid..
-                (->NextShapeComponent ..eid.. ..shape..) => ..c..
-                (mock-set-component ..c..) => anything))
+      (let [w (make-world identity)]
+        ((-add-shape ..shape..) w) => anything
+        (provided (world/add-entity w) => ..eid..
+                  (->NextShapeComponent ..eid.. ..shape..) => ..c..
+                  (world/set-component w ..c..) => anything)))
 
 
 (fact "-set-next-shape creates a NextShapeComponent if non exists."
-      (-set-next-shape mock-world [..shape.. ..next-shape..]) => [..next-shape..]
-      (provided (query/all NextShapeComponent) => ..q..
-                (mock-query ..q..) => nil
-                (-add-shape ..shape..) => ..f..
-                (mock-transaction! ..f..) => anything))
+      (let [w (make-world identity)]
+        (-set-next-shape w [..shape.. ..next-shape..]) => [..next-shape..]
+        (provided (query/all NextShapeComponent) => ..q..
+                  (world/query w ..q..) => nil
+                  (-add-shape ..shape..) => ..f..
+                  (world/transaction! w ..f..) => anything)))
 
 
 (fact "-set-next-shape does nothing if there a NextShapeComponent exists."
-      (-set-next-shape mock-world ..shapes..) => ..shapes..
-      (provided (query/all NextShapeComponent) => ..q..
-                (mock-query ..q..) => [..eid..]))
+      (let [w (make-world identity)]
+        (-set-next-shape w ..shapes..) => ..shapes..
+        (provided (query/all NextShapeComponent) => ..q..
+                  (world/query w ..q..) => [..eid..])))
