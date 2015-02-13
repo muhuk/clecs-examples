@@ -1,6 +1,6 @@
 (ns clecs-example-rougelike.screen
-  (:require [lanterna.screen :as s]
-            [com.stuartsierra.component :as component]))
+  (:require [com.stuartsierra.component :as component]
+            [lanterna.screen :as s]))
 
 
 (defrecord ScreenAdapter [screen running? size]

@@ -1,26 +1,12 @@
 (ns clecs-example-rougelike.components
-  (:require [clecs.component :refer :all]))
+  (:require [clecs.component :refer [component]]))
 
 
-(defcomponent Inventory [eid])
-
-
-(defcomponent Location [eid x y])
-
-
-(defcomponent MoveIntent [eid direction])
-
-
-(defcomponent Name [eid name])
-
-
-(defcomponent Renderable [eid sprite])
-
-
-(defcomponent Takeable [eid])
-
-
-(defcomponent TakeIntent [eid])
-
-
-(defcomponent Walkable [eid])
+(def components [(component :Inventory nil)
+                 (component :Location {:x Int :y Int})
+                 (component :MoveIntent {:direction Str})
+                 (component :Name {:name Str})
+                 (component :Renderable {:sprite Str})
+                 (component :Takeable nil)
+                 (component :TakeIntent nil)
+                 (component :Walkable nil)])

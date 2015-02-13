@@ -1,6 +1,5 @@
 (ns clecs-example-rougelike.entities
-  (:require [clecs.world :as w]
-            [clecs-example-rougelike.components :refer :all]))
+  (:require [clecs.world :as w]))
 
 
 (def tagged-entities (atom {}))
@@ -13,7 +12,7 @@
                                  y))
   ([world eids x y]
    (filter (fn [eid]
-             (let [{x' :x y' :y} (w/component world eid Location)]
+             (let [{x' :x y' :y} (w/component world eid :Location)]
                (and (= x' x) (= y' y))))
            eids)))
 
@@ -23,50 +22,50 @@
 
 (defmethod make-entity :floor [world x y _]
   (let [eid (w/add-entity world)]
-    (w/set-component world (->Location eid x y))
-    (w/set-component world (->Renderable eid :floor))
-    (w/set-component world (->Walkable eid))))
+    (w/set-component world eid :Location {:x x :y y})
+    (w/set-component world eid :Renderable {:sprite "floor"})
+    (w/set-component world eid :Walkable nil)))
 
 
 (defmethod make-entity :player [world x y _]
   (let [eid (w/add-entity world)]
     (swap! tagged-entities assoc :player eid)
     (doto world
-      (w/set-component (->Location eid x y))
-      (w/set-component (->Renderable eid :player)))))
+      (w/set-component eid :Location {:x x :y y})
+      (w/set-component eid :Renderable {:sprite "player"}))))
 
 
 (defmethod make-entity :potion [world x y _]
   (let [eid (w/add-entity world)]
     (doto world
-      (w/set-component (->Location eid x y))
-      (w/set-component (->Renderable eid :potion))
-      (w/set-component (->Takeable eid))
-      (w/set-component (->Name eid "Potion")))))
+      (w/set-component eid :Location {:x x :y y})
+      (w/set-component eid :Renderable {:sprite "potion"})
+      (w/set-component eid :Takeable nil)
+      (w/set-component eid :Name {:name "Potion"}))))
 
 
 (defmethod make-entity :stairs-down [world x y _]
   (let [eid (w/add-entity world)]
     (doto world
-      (w/set-component (->Location eid x y))
-      (w/set-component (->Renderable eid :stairs-down))
-      (w/set-component (->Walkable eid))
-      (w/set-component (->Name eid "Stairs")))))
+      (w/set-component eid :Location {:x x :y y})
+      (w/set-component eid :Renderable {:sprite "stairs-down"})
+      (w/set-component eid :Walkable nil)
+      (w/set-component eid :Name {:name "Stairs"}))))
 
 
 (defmethod make-entity :sword [world x y _]
   (let [eid (w/add-entity world)]
     (doto world
-      (w/set-component (->Location eid x y))
-      (w/set-component (->Renderable eid :sword))
-      (w/set-component (->Takeable eid))
-      (w/set-component (->Name eid "Sword")))))
+      (w/set-component eid :Location {:x x :y y})
+      (w/set-component eid :Renderable {:sprite "sword"})
+      (w/set-component eid :Takeable nil)
+      (w/set-component eid :Name {:name "Sword"}))))
 
 
 (defmethod make-entity :wall [world x y _]
   (let [eid (w/add-entity world)]
-    (w/set-component world (->Location eid x y))
-    (w/set-component world (->Renderable eid :wall))))
+    (w/set-component world eid :Location {:x x :y y})
+    (w/set-component world eid :Renderable {:sprite "wall"})))
 
 
 (defmethod make-entity :default [world x y e]

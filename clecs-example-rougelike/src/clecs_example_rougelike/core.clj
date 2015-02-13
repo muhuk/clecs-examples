@@ -1,6 +1,6 @@
 (ns clecs-example-rougelike.core
-  (:require [com.stuartsierra.component :as component]
-            [clecs-example-rougelike.app :refer [make-system]])
+  (:require [clecs-example-rougelike.app :refer [make-system]]
+            [com.stuartsierra.component :as component])
   (:gen-class))
 
 

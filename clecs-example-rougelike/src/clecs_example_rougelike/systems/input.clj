@@ -1,11 +1,6 @@
 (ns clecs-example-rougelike.systems.input
-  (:require [clecs.world :as w]
-            [clecs-example-rougelike.components :refer [->MoveIntent
-                                                        ->TakeIntent
-                                                        MoveIntent
-                                                        Renderable
-                                                        TakeIntent]]
-            [clecs-example-rougelike.entities :refer [tagged-entities]]
+  (:require [clecs-example-rougelike.entities :refer [tagged-entities]]
+            [clecs.world :as w]
             [lanterna.screen :as s]))
 
 
@@ -19,7 +14,7 @@
 
 (defn- process-input [inputs world]
   (let [eid (:player @tagged-entities)
-        c (w/component world eid MoveIntent)
+        c (w/component world eid :MoveIntent)
         i (atom nil)]
     (when (nil? c)
       (swap! inputs
@@ -31,18 +26,19 @@
       (println ";; Processing input: " @i)
       (case @i
         ;; Move
-        :left (w/transaction! world #(w/set-component % (->MoveIntent eid :left)))
-        :right (w/transaction! world #(w/set-component % (->MoveIntent eid :right)))
-        :up (w/transaction! world #(w/set-component % (->MoveIntent eid :up)))
-        :down (w/transaction! world #(w/set-component % (->MoveIntent eid :down)))
+        :left (w/set-component world eid :MoveIntent {:direction "left"})
+        :right (w/set-component world eid :MoveIntent {:direction "right"})
+        :up (w/set-component world eid :MoveIntent {:direction "up"})
+        :down (w/set-component world eid :MoveIntent {:direction "down"})
         ;; Items
-        \t (w/transaction! world #(w/set-component % (->TakeIntent eid)))
+        \t (w/set-component world eid :TakeIntent nil)
         nil))))
 
 
 (defn input-system [screen]
   (let [inputs (atom clojure.lang.PersistentQueue/EMPTY)]
-    (fn [world _]
-      (println ";; Running input-system.")
-      (get-inputs! inputs screen)
-      (process-input inputs world))))
+    {:name :input
+     :process (fn [world _]
+                (println ";; Running input-system.")
+                (get-inputs! inputs screen)
+                (process-input inputs world))}))

@@ -1,10 +1,9 @@
 (ns clecs-example-rougelike.systems.rendering
-  (:require [lanterna.screen :as s]
+  (:require [clecs-example-rougelike.entities :refer [find-entities-at
+                                                      tagged-entities]]
             [clecs.query :as query]
             [clecs.world :as w]
-            [clecs-example-rougelike.components :refer :all]
-            [clecs-example-rougelike.entities :refer [find-entities-at
-                                                      tagged-entities]]))
+            [lanterna.screen :as s]))
 
 
 (def min-height 20)
@@ -16,27 +15,27 @@
 (def side-panel-width 20)
 
 
-(def sprites {:floor {:glyph "." :fg :magenta :bg :black :z-order 1}
-              :player {:glyph "@" :fg :black :bg :white :z-order 999}
-              :potion {:glyph "b" :fg :cyan :bg :black :z-order 100}
-              :stairs-down {:glyph ">" :fg :green :bg :black :z-order 1}
-              :sword {:glyph "t" :fg :cyan :bg :black :z-order 100}
-              :wall {:glyph "#" :fg :white :bg :black :z-order 999}})
+(def sprites {"floor" {:glyph "." :fg :magenta :bg :black :z-order 1}
+              "player" {:glyph "@" :fg :black :bg :white :z-order 999}
+              "potion" {:glyph "b" :fg :cyan :bg :black :z-order 100}
+              "stairs-down" {:glyph ">" :fg :green :bg :black :z-order 1}
+              "sword" {:glyph "t" :fg :cyan :bg :black :z-order 100}
+              "wall" {:glyph "#" :fg :white :bg :black :z-order 999}})
 
 
 (declare render-entities)
 
 
-(def ^:private q-inventory (query/all Inventory Name))
+(def ^:private q-inventory (query/all :Inventory :Name))
 
 
-(def ^:private q-named (query/all Name Location))
+(def ^:private q-named (query/all :Name :Location))
 
 
-(def ^:private q-renderables (query/all Renderable Location))
+(def ^:private q-renderables (query/all :Renderable :Location))
 
 
-(def ^:private q-takeable (query/all Takeable Location))
+(def ^:private q-takeable (query/all :Takeable :Location))
 
 
 (defn- clear-screen [screen]
@@ -48,7 +47,7 @@
 
 (defn- find-origin [world]
   (let [eid (:player @tagged-entities)]
-    (let [{:keys [x y]} (w/component world eid Location)]
+    (let [{:keys [x y]} (w/component world eid :Location)]
       [x y])))
 
 
@@ -75,8 +74,8 @@
   (let [[dx dy] (origin-offset world screen)
         put-glyph (make-put-glyph screen)]
     (doseq [eid (w/query world q-renderables)]
-      (let [{sprite :sprite} (w/component world eid Renderable)
-            {world-x :x world-y :y} (w/component world eid Location)
+      (let [{sprite :sprite} (w/component world eid :Renderable)
+            {world-x :x world-y :y} (w/component world eid :Location)
             {:keys [fg bg glyph z-order]} (sprites sprite)]
         (put-glyph z-order (+ world-x dx) (+ world-y dy) glyph fg bg)))))
 
@@ -85,7 +84,7 @@
   (let [[w h] (s/get-size screen)
         colors {:fg :black :bg :yellow}
         player-eid (:player @tagged-entities)
-        {:keys [x y]} (w/component world player-eid Location)
+        {:keys [x y]} (w/component world player-eid :Location)
         offset-x (inc (- w side-panel-width))
         offset-y (atom 1)]
     ;; Clear side panel area.
@@ -102,7 +101,7 @@
     ;; Display item if any.
     (let [named-eids (w/query world q-named)
           eid (first (find-entities-at world named-eids x y))]
-      (when-let [name-component (w/component world eid Name)]
+      (when-let [name-component (w/component world eid :Name)]
         (s/put-string screen
                       offset-x
                       @offset-y
@@ -121,7 +120,7 @@
         (s/put-string screen
                       offset-x
                       @offset-y
-                      (str "  " (:name (w/component world eid Name)))
+                      (str "  " (:name (w/component world eid :Name)))
                       colors)
         (swap! offset-y inc))
       (do
@@ -144,14 +143,18 @@
 
 
 (defn rendering-system [screen]
-  (fn [world dt]
-    (when (>= dt 16)
-      (println ";; Running rendering-system.")
-      (clear-screen screen)
-      (let [[w h] (s/get-size screen)]
-        (if (and (>= w min-width) (>= h min-height))
-          (do
-            (render-entities world screen)
-            (render-side-panel world screen))
-          (s/put-string screen 1 1 (str "You must resize window to at least " min-width "x" min-height "."))))
-      (s/redraw screen))))
+  {:name :rendering
+   :process (fn [world dt]
+              (when (>= dt 16)
+                (println ";; Running rendering-system.")
+                (clear-screen screen)
+                (let [[w h] (s/get-size screen)]
+                  (if (and (>= w min-width) (>= h min-height))
+                    (do
+                      (render-entities world screen)
+                      (render-side-panel world screen))
+                    (s/put-string screen
+                                  1
+                                  1
+                                  (str "You must resize window to at least " min-width "x" min-height "."))))
+                (s/redraw screen)))})
