@@ -1,23 +1,21 @@
 (ns clecs-tetris.world.component
-  (:require [clecs.component :refer [defcomponent]]))
+  (:require [clecs.component :refer [component]]))
 
 
-(defcomponent CurrentShapeComponent [eid x y shape])
 
 
-(defcomponent GlassTileComponent [eid x y tile-type])
-
-
-(defcomponent LevelComponent [eid level])
-
-
-(defcomponent LinesDroppedComponent [eid lines])
-
-
-(defcomponent NextShapeComponent [eid shape])
-
-
-(defcomponent ScoreComponent [eid score])
-
-
-(defcomponent TargetLocationComponent [eid x y countdown])
+(def components [(component :CurrentShapeComponent {:x Integer
+                                                    :y Integer
+                                                    :shape-name String
+                                                    :shape-index Integer})
+                 (component :GlassTileComponent {:x Integer
+                                                 :y Integer
+                                                 :tile-type String})
+                 (component :LevelComponent {:level Integer})
+                 (component :LinesDroppedComponent {:lines Integer})
+                 (component :NextShapeComponent {:shape-name String
+                                                 :shape-index Integer})
+                 (component :ScoreComponent {:score Integer})
+                 (component :TargetLocationComponent {:x Integer
+                                                      :y Integer
+                                                      :countdown Integer})])

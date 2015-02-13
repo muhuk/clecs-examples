@@ -1,27 +1,27 @@
 (ns clecs-tetris.world.system.next-shape
-  (:require [clecs-tetris.world.component :refer [->NextShapeComponent
-                                                  NextShapeComponent]]
-            [clecs.query :as query]
+  (:require [clecs.query :as query]
+            [clecs.system :refer [system]]
             [clecs.world :as world]))
 
 
-(defn -add-shape [shape]
-  (fn [w]
-    (let [eid (world/add-entity w)
-          c (->NextShapeComponent eid shape)]
-      (world/set-component w c))))
+(defn -add-shape [w shape]
+  (let [eid (world/add-entity w)]
+    (world/set-component w eid :NextShapeComponent (dissoc shape :tiles))))
 
 
 (defn -set-next-shape [w shapes]
-  (let [q (query/all NextShapeComponent)]
+  (let [q (query/all :NextShapeComponent)]
     (if (empty? (world/query w q))
       (do
-        (world/transaction! w (-add-shape (first shapes)))
+        (-add-shape w (first shapes))
         (rest shapes))
       shapes)))
 
 
 (defn make-next-shape-system [shapes]
-  (let [shapes-atom (atom shapes)]
-    (fn [w _]
-      (swap! shapes-atom (partial -set-next-shape w)))))
+  (let [shapes-atom (atom shapes)
+        process (fn [w _]
+                  (swap! shapes-atom (partial -set-next-shape w)))]
+    (system {:name :next-shape-system
+             :process-fn process
+             :writes #{:NextShapeComponent}})))

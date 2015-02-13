@@ -1,12 +1,7 @@
 (ns clecs-tetris.world.system.gravity
   (:require [clecs.query :as query]
-            [clecs.world :as world]
-            [clecs-tetris.world.component :refer [->CurrentShapeComponent
-                                                  ->GlassTileComponent
-                                                  ->TargetLocationComponent
-                                                  CurrentShapeComponent
-                                                  GlassTileComponent
-                                                  TargetLocationComponent]]))
+            [clecs.system :refer [system]]
+            [clecs.world :as world]))
 
 
 (declare -move-target-location)
@@ -16,20 +11,31 @@
   (if (pos? countdown-value)
     (- countdown-value dt)
     (do
-      (world/transaction! w -move-target-location)
+      (-move-target-location w)
       countdown-duration)))
 
 
 (defn -move-target-location [w]
-  (let [q (query/all TargetLocationComponent)
+  (let [q (query/all :TargetLocationComponent)
         [eid] (world/query w q)]
     (when eid
-      (let [{:keys [x y countdown]} (world/component w eid TargetLocationComponent)]
-        (world/set-component w (->TargetLocationComponent eid x (dec y) countdown)))))
+      (let [{:keys [x y countdown]} (world/component w eid :TargetLocationComponent)]
+        (world/set-component w
+                             eid
+                             :TargetLocationComponent
+                             {:x x :y (dec y) :countdown countdown}))))
   nil)
 
 
 (defn make-gravity-system [countdown-duration]
-  (let [countdown-value (atom countdown-duration)]
-    (fn [w dt]
-      (swap! countdown-value #(-apply-gravity w dt % countdown-duration)))))
+  ;; TODO: Use scheduling when its implemented.
+  (let [countdown-value (atom countdown-duration)
+        process (fn [w dt]
+                  (swap! countdown-value
+                         #(-apply-gravity w
+                                          dt
+                                          %
+                                          countdown-duration)))]
+    (system  {:name :gravity-system
+              :process-fn process
+              :writes #{:TargetLocationComponent}})))

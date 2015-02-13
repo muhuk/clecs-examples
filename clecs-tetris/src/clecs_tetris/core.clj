@@ -9,7 +9,7 @@
 
 (defn init []
   (let [screen (make-screen 30)]
-    {:world (make-world :default-tile :empty
+    {:world (make-world :default-tile "empty"
                         :glass-height 20
                         :glass-width 10
                         :gravity-countdown 1000

@@ -36,12 +36,12 @@
 
 
 (defn- draw-tile [g2d tile]
-  (let [styles {:empty (g/style :background :lightgray)
-                :filled (g/style :background :gray)
-                :moving (g/style :background :red)}]
+  (let [styles {"empty" (g/style :background :lightgray)
+                "filled" (g/style :background :gray)
+                "moving" (g/style :background :red)}]
     (g/draw g2d
             (g/rect 0 0 1 1)
-            (tile styles))))
+            (get styles tile))))
 
 
 (defn- make-side-panel [next-shape tile-size]

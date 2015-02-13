@@ -1,8 +1,8 @@
 (ns clecs-tetris.world.shape)
 
 
-(def ^:private legend {\. :empty
-                       \# :filled})
+(def ^:private legend {\. "empty"
+                       \# "filled"})
 
 
 (defn- make-shape [shape-name & tiles-strs]
@@ -13,13 +13,13 @@
                    tiles-strs)]
     (->> tiles
          (map-indexed (fn [idx tiles] {:shape-name shape-name
-                                       :tiles tiles
-                                       :idx idx}))
+                                       :shape-index idx
+                                       :tiles tiles}))
          doall
          vec)))
 
 
-(def I (make-shape 'I
+(def I (make-shape "I"
                    (str "...."
                         "...."
                         "####"
@@ -30,7 +30,7 @@
                         ".#..")))
 
 
-(def J (make-shape 'J
+(def J (make-shape "J"
                    (str "...."
                         "###."
                         "..#."
@@ -49,7 +49,7 @@
                         "....")))
 
 
-(def L (make-shape 'L
+(def L (make-shape "L"
                    (str "...."
                         "###."
                         "#..."
@@ -68,14 +68,14 @@
                         "....")))
 
 
-(def O (make-shape 'O
+(def O (make-shape "O"
                    (str "...."
                         ".##."
                         ".##."
                         "....")))
 
 
-(def S (make-shape 'S
+(def S (make-shape "S"
                    (str "...."
                         ".##."
                         "##.."
@@ -86,7 +86,7 @@
                         "..#.")))
 
 
-(def T (make-shape 'T
+(def T (make-shape "T"
                    (str "...."
                         "###."
                         ".#.."
@@ -105,7 +105,7 @@
                         "....")))
 
 
-(def Z (make-shape 'Z
+(def Z (make-shape "Z"
                    (str "...."
                         "##.."
                         ".##."
@@ -116,15 +116,25 @@
                         ".#..")))
 
 
-(def shapes [I J L O S T Z])
+(def shapes {"I" I
+             "J" J
+             "L" L
+             "O" O
+             "S" S
+             "T" T
+             "Z" Z})
 
 
 (def shape-bag
-  (map rand-nth (mapcat shuffle (repeat shapes))))
+  (let [shape-seq (list I J L O S T Z)]
+    (map rand-nth (mapcat shuffle (repeat shape-seq)))))
 
 
-(let [this-ns *ns*]
-  (defn rotate-shape [shape-instance]
-    (let [shape @((:shape-name shape-instance) (ns-publics this-ns))
-          new-idx (mod (inc (:idx shape-instance)) (count shape))]
-      (shape new-idx))))
+(defn rotate-shape [shape-name shape-index]
+  (let [shape (get shapes shape-name)
+        new-idx (mod (inc shape-index) (count shape))]
+    (shape new-idx)))
+
+
+(defn tiles [shape-name shape-index]
+  (:tiles (get-in shapes [shape-name shape-index])))
