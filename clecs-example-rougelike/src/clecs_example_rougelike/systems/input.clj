@@ -1,5 +1,6 @@
 (ns clecs-example-rougelike.systems.input
   (:require [clecs-example-rougelike.entities :refer [tagged-entities]]
+            [clecs.system :refer [system]]
             [clecs.world :as w]
             [lanterna.screen :as s]))
 
@@ -37,8 +38,10 @@
 
 (defn input-system [screen]
   (let [inputs (atom clojure.lang.PersistentQueue/EMPTY)]
-    {:name :input
-     :process (fn [world _]
-                (println ";; Running input-system.")
-                (get-inputs! inputs screen)
-                (process-input inputs world))}))
+    (system {:name :input
+             :process-fn (fn [world _]
+                           (println ";; Running input-system.")
+                           (get-inputs! inputs screen)
+                           (process-input inputs world))
+             :writes #{:MoveIntent
+                       :TakeIntent}})))

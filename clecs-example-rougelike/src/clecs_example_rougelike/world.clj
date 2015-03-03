@@ -2,7 +2,8 @@
   (:require [clecs-example-rougelike.components :refer [components]]
             [clecs-example-rougelike.entities :refer [make-entity]]
             [clecs-example-rougelike.maps :refer [map-1]]
-            [clecs.backend.atom-world :refer [atom-world]]
+            [clecs.backend.atom-world :refer [atom-world-factory]]
+            [clecs.world :as world]
             [com.stuartsierra.component :refer [Lifecycle using]]))
 
 
@@ -12,9 +13,10 @@
          (if (nil? world)
            (do
              (println ";; Starting world.")
-             (assoc component :world (atom-world components
-                                                 initial-transaction
-                                                 (:systems systems))))
+             (assoc component :world (world/world atom-world-factory
+                                                  {:components components
+                                                   :initializer initial-transaction
+                                                   :systems (:systems systems)})))
            (do
              (println ";; World alread started.")
              component)))

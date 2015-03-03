@@ -2,6 +2,7 @@
   (:require [clecs-example-rougelike.entities :refer [find-entities-at
                                                       tagged-entities]]
             [clecs.query :as query]
+            [clecs.system :refer [system]]
             [clecs.world :as w]
             [lanterna.screen :as s]))
 
@@ -143,18 +144,23 @@
 
 
 (defn rendering-system [screen]
-  {:name :rendering
-   :process (fn [world dt]
-              (when (>= dt 16)
-                (println ";; Running rendering-system.")
-                (clear-screen screen)
-                (let [[w h] (s/get-size screen)]
-                  (if (and (>= w min-width) (>= h min-height))
-                    (do
-                      (render-entities world screen)
-                      (render-side-panel world screen))
-                    (s/put-string screen
-                                  1
-                                  1
-                                  (str "You must resize window to at least " min-width "x" min-height "."))))
-                (s/redraw screen)))})
+  (system {:name :rendering
+           :process-fn (fn [world dt]
+                         (when (>= dt 16)
+                           (println ";; Running rendering-system.")
+                           (clear-screen screen)
+                           (let [[w h] (s/get-size screen)]
+                             (if (and (>= w min-width) (>= h min-height))
+                               (do
+                                 (render-entities world screen)
+                                 (render-side-panel world screen))
+                               (s/put-string screen
+                                             1
+                                             1
+                                             (str "You must resize window to at least " min-width "x" min-height "."))))
+                           (s/redraw screen)))
+           :reads #{:Inventory
+                    :Location
+                    :Name
+                    :Renderable
+                    :Takeable}}))
