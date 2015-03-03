@@ -1,4 +1,4 @@
-(ns clecs-example-rougelike.systems.move
+(ns clecs-example-roguelike.systems.move
   (:require [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as w]))

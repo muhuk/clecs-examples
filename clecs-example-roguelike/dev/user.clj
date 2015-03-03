@@ -1,7 +1,7 @@
 (ns user
   (:require [com.stuartsierra.component :as component]
             [clojure.tools.namespace.repl :refer [refresh]]
-            [clecs-example-rougelike.app :refer [make-system]]))
+            [clecs-example-roguelike.app :refer [make-system]]))
 
 
 (def system nil)

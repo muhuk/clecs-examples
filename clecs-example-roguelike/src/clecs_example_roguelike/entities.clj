@@ -1,4 +1,4 @@
-(ns clecs-example-rougelike.entities
+(ns clecs-example-roguelike.entities
   (:require [clecs.world :as w]))
 
 

@@ -1,8 +1,8 @@
-(ns clecs-example-rougelike.systems
-  (:require [clecs-example-rougelike.systems.input :refer [input-system]]
-            [clecs-example-rougelike.systems.move :refer [move-system]]
-            [clecs-example-rougelike.systems.rendering :refer [rendering-system]]
-            [clecs-example-rougelike.systems.take :refer [take-system]]
+(ns clecs-example-roguelike.systems
+  (:require [clecs-example-roguelike.systems.input :refer [input-system]]
+            [clecs-example-roguelike.systems.move :refer [move-system]]
+            [clecs-example-roguelike.systems.rendering :refer [rendering-system]]
+            [clecs-example-roguelike.systems.take :refer [take-system]]
             [com.stuartsierra.component :refer [Lifecycle using]]))
 
 

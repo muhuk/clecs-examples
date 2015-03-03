@@ -1,7 +1,7 @@
-(ns clecs-example-rougelike.app
-  (:require [clecs-example-rougelike.screen :refer [make-screen-adapter]]
-            [clecs-example-rougelike.systems :refer [make-systems]]
-            [clecs-example-rougelike.world :refer [make-world]]
+(ns clecs-example-roguelike.app
+  (:require [clecs-example-roguelike.screen :refer [make-screen-adapter]]
+            [clecs-example-roguelike.systems :refer [make-systems]]
+            [clecs-example-roguelike.world :refer [make-world]]
             [clecs.world :as w]
             [com.stuartsierra.component :as component])
   (:gen-class))

@@ -1,7 +1,7 @@
-(ns clecs-example-rougelike.world
-  (:require [clecs-example-rougelike.components :refer [components]]
-            [clecs-example-rougelike.entities :refer [make-entity]]
-            [clecs-example-rougelike.maps :refer [map-1]]
+(ns clecs-example-roguelike.world
+  (:require [clecs-example-roguelike.components :refer [components]]
+            [clecs-example-roguelike.entities :refer [make-entity]]
+            [clecs-example-roguelike.maps :refer [map-1]]
             [clecs.backend.atom-world :refer [atom-world-factory]]
             [clecs.world :as world]
             [com.stuartsierra.component :refer [Lifecycle using]]))

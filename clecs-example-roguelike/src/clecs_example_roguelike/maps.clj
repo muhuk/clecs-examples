@@ -1,4 +1,4 @@
-(ns clecs-example-rougelike.maps)
+(ns clecs-example-roguelike.maps)
 
 
 (def legend {\# [:wall]

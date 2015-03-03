@@ -1,4 +1,4 @@
-(ns clecs-example-rougelike.screen
+(ns clecs-example-roguelike.screen
   (:require [com.stuartsierra.component :as component]
             [lanterna.screen :as s]))
 

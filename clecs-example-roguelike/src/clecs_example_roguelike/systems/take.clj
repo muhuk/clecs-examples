@@ -1,5 +1,5 @@
-(ns clecs-example-rougelike.systems.take
-  (:require [clecs-example-rougelike.entities :refer [find-entities-at]]
+(ns clecs-example-roguelike.systems.take
+  (:require [clecs-example-roguelike.entities :refer [find-entities-at]]
             [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as w]))

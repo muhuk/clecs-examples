@@ -1,5 +1,5 @@
-(ns clecs-example-rougelike.systems.input
-  (:require [clecs-example-rougelike.entities :refer [tagged-entities]]
+(ns clecs-example-roguelike.systems.input
+  (:require [clecs-example-roguelike.entities :refer [tagged-entities]]
             [clecs.system :refer [system]]
             [clecs.world :as w]
             [lanterna.screen :as s]))

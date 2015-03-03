@@ -1,4 +1,4 @@
-(ns clecs-example-rougelike.components
+(ns clecs-example-roguelike.components
   (:require [clecs.component :refer [component]]))
 
 
