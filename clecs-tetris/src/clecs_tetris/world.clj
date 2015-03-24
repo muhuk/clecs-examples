@@ -2,6 +2,7 @@
   (:require [clecs-tetris.world.component :refer [components]]
             [clecs-tetris.world.init :refer [make-initializer]]
             [clecs-tetris.world.shape :refer [shape-bag]]
+            [clecs-tetris.world.system.collision :refer [collision-system]]
             [clecs-tetris.world.system.gravity :refer [make-gravity-system]]
             [clecs-tetris.world.system.new-shape :refer [make-new-shape-system]]
             [clecs-tetris.world.system.next-shape :refer [make-next-shape-system]]
@@ -20,7 +21,8 @@
   (let [initializer (make-initializer :default-tile default-tile
                                       :glass-height glass-height
                                       :glass-width glass-width)
-        systems [(make-gravity-system gravity-countdown)
+        systems [collision-system
+                 (make-gravity-system gravity-countdown)
                  (make-new-shape-system (/ (- glass-width 4) 2)
                                                 glass-height
                                                 update-shape-countdown-duration)

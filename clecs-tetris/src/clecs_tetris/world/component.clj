@@ -8,6 +8,7 @@
                                                     :y Integer
                                                     :shape-name String
                                                     :shape-index Integer})
+                 (component :CollisionComponent {:collision? Boolean})
                  (component :GlassTileComponent {:x Integer
                                                  :y Integer
                                                  :tile-type String})

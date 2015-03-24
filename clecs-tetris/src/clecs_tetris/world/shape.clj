@@ -138,3 +138,14 @@
 
 (defn tiles [shape-name shape-index]
   (:tiles (get-in shapes [shape-name shape-index])))
+
+
+(defn with-coordinates [tiles]
+  (let [rows (count tiles)
+        reverse-y #(- (dec rows) %)]
+    (->> tiles
+         (map-indexed (fn [y row]
+                        (map-indexed (fn [x tile]
+                                       [x (reverse-y y) tile])
+                                     row)))
+         (apply concat))))

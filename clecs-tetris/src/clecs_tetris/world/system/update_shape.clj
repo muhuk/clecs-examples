@@ -1,26 +1,17 @@
 (ns clecs-tetris.world.system.update-shape
-  (:require [clecs-tetris.world.shape :refer [tiles]]
+  (:require [clecs-tetris.world.glass :refer [find-glass-tile]]
+            [clecs-tetris.world.shape :refer [tiles with-coordinates]]
             [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as world]))
 
 
-(defn -set-glass-tile [w x y tile]
-  (let [f (fn [eid]
-            (let [{cx :x cy :y} (world/component w eid :GlassTileComponent)]
-              (and (= cx x) (= cy y))))
-        eids (world/query w (query/all :GlassTileComponent))]
-    (when-let [eid (first (filter f eids))]
-      (world/set-component w eid :GlassTileComponent {:x x :y y :tile-type tile}))
-    nil))
+(declare -move-shape
+         -set-glass-tile)
 
 
-(defn -update-glass-tiles [w [old-x old-y] [x y] tiles]
-  (let [h-1 (dec (count tiles))
-        f (fn [neg-y row]
-            (map-indexed (fn [x tile] [x (- h-1 neg-y) tile]) row))
-        position-mapped (map-indexed f tiles)
-        only-filled (filter #(= (nth % 2) "filled") (apply concat position-mapped))]
+(defn -move-shape [w [old-x old-y] [x y] tiles]
+  (let [only-filled (filter #(= (nth % 2) "filled") (with-coordinates tiles))]
     (doseq [[tile-x tile-y tile] only-filled]
       (-set-glass-tile w (+ old-x tile-x) (+ old-y tile-y) "empty"))
     (doseq [[tile-x tile-y tile] only-filled]
@@ -28,16 +19,27 @@
     nil))
 
 
+(defn -set-glass-tile [w x y tile]
+  (when-let [eid (find-glass-tile w x y)]
+    (world/set-component w eid :GlassTileComponent {:x x :y y :tile-type tile}))
+  nil)
+
+
 (defn -update-shape-location [w dt countdown-duration]
   (let [q (query/all :CurrentShapeComponent
+                     :CollisionComponent
                      :TargetLocationComponent)]
     (when-let [[eid] (world/query w q)]
-      (let [{target-x :x target-y :y value :countdown} (world/component w eid :TargetLocationComponent)]
-        (if (pos? value)
+      (let [{target-x :x
+             target-y :y
+             cd :countdown} (world/component w eid :TargetLocationComponent)]
+        (if (pos? cd)
+          ;; Countdown is positive => decrement it.
           (world/set-component w
                                eid
                                :TargetLocationComponent
-                               {:x target-x :y target-y :countdown (- value dt)})
+                               {:x target-x :y target-y :countdown (- cd dt)})
+          ;; Countdown is not positive => try to move the shape.
           (let [{:keys [x
                         y
                         shape-name
@@ -49,17 +51,22 @@
                                  (assoc current-shape
                                    :x target-x
                                    :y target-y))
-            (-update-glass-tiles w [x y] [target-x target-y] (tiles shape-name
-                                                                    shape-index))
+            (-move-shape w
+                         [x y]
+                         [target-x target-y]
+                         (tiles shape-name shape-index))
             (world/set-component w
                                  eid
                                  :TargetLocationComponent
-                                 {:x target-x :y target-y :countdown countdown-duration})))))))
+                                 {:x target-x :y target-y :countdown countdown-duration})
+            (world/remove-component w eid :CollisionComponent)))))))
+
 
 (defn make-update-shape-system [countdown-duration]
   (system {:name :update-shape-system
            :process-fn (fn [w dt]
                          (-update-shape-location w dt countdown-duration))
            :writes #{:CurrentShapeComponent
+                     :CollisionComponent
                      :GlassTileComponent
                      :TargetLocationComponent}}))
