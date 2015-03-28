@@ -10,11 +10,17 @@
          -set-glass-tile)
 
 
+(defn -freeze-shape [w x y tiles]
+  (let [only-filled (filter #(= (nth % 2) "filled") (with-coordinates tiles))]
+    (doseq [[tile-x tile-y _] only-filled]
+      (-set-glass-tile w (+ x tile-x) (+ y tile-y) "filled"))))
+
+
 (defn -move-shape [w [old-x old-y] [x y] tiles]
   (let [only-filled (filter #(= (nth % 2) "filled") (with-coordinates tiles))]
-    (doseq [[tile-x tile-y tile] only-filled]
+    (doseq [[tile-x tile-y _] only-filled]
       (-set-glass-tile w (+ old-x tile-x) (+ old-y tile-y) "empty"))
-    (doseq [[tile-x tile-y tile] only-filled]
+    (doseq [[tile-x tile-y _] only-filled]
       (-set-glass-tile w (+ x tile-x) (+ y tile-y) "moving"))
     nil))
 
@@ -40,26 +46,34 @@
                                :TargetLocationComponent
                                {:x target-x :y target-y :countdown (- cd dt)})
           ;; Countdown is not positive => try to move the shape.
-          (let [{:keys [x
+          (let [{collides? :collision?} (world/component w eid :CollisionComponent)
+                {:keys [x
                         y
                         shape-name
                         shape-index]
                  :as current-shape} (world/component w eid :CurrentShapeComponent)]
-            (world/set-component w
-                                 eid
-                                 :CurrentShapeComponent
-                                 (assoc current-shape
-                                   :x target-x
-                                   :y target-y))
-            (-move-shape w
-                         [x y]
-                         [target-x target-y]
-                         (tiles shape-name shape-index))
-            (world/set-component w
-                                 eid
-                                 :TargetLocationComponent
-                                 {:x target-x :y target-y :countdown countdown-duration})
-            (world/remove-component w eid :CollisionComponent)))))))
+            (if collides?
+              (do
+                (-freeze-shape w x y (tiles shape-name shape-index))
+                (world/remove-component w eid :CurrentShapeComponent)
+                (world/remove-component w eid :TargetLocationComponent)
+                (world/remove-component w eid :CollisionComponent))
+              (do
+                (world/set-component w
+                                     eid
+                                     :CurrentShapeComponent
+                                     (assoc current-shape
+                                       :x target-x
+                                       :y target-y))
+                (-move-shape w
+                             [x y]
+                             [target-x target-y]
+                             (tiles shape-name shape-index))
+                (world/set-component w
+                                     eid
+                                     :TargetLocationComponent
+                                     {:x target-x :y target-y :countdown countdown-duration})
+                (world/remove-component w eid :CollisionComponent)))))))))
 
 
 (defn make-update-shape-system [countdown-duration]

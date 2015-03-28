@@ -8,6 +8,12 @@
             [midje.sweet :refer :all]))
 
 
+(fact "-freeze-shape"
+      (let [w (mock/mock-editable-world)]
+        (-freeze-shape w 3 5 [["empty" "filled"]]) => nil
+        (provided (-set-glass-tile w 4 5 "filled") => nil)))
+
+
 (fact "-move-shape erases and then re-applied the tiles."
       (let [w (mock/mock-editable-world)]
         (-move-shape w [1 2] [5 6] [["empty" "filled"]]) => nil
@@ -70,6 +76,7 @@
                                :CollisionComponent
                                :TargetLocationComponent) => ..q..
                     (mock/query w ..q..) => [..eid..]
+                    (mock/component w ..eid.. :CollisionComponent) => {:collision? false}
                     (mock/component w ..eid.. :CurrentShapeComponent) => current-shape-component
                     (mock/component w ..eid.. :TargetLocationComponent) => target-location-component
                     (world/set-component w
@@ -85,6 +92,36 @@
                                          ..eid..
                                          :TargetLocationComponent
                                          {:x target-x :y target-y :countdown ..cd..}) => nil
+                    (mock/remove-component w
+                                           ..eid..
+                                           :CollisionComponent) => nil))))
+
+
+(fact "-update-shape-location freezes shape if there is collision."
+      (let [w (mock/mock-editable-world)]
+        (let [[x y] [0 0]
+              [target-x target-y] [1 1]
+              current-shape-component {:x x
+                                       :y y
+                                       :shape-name ..shape-name..
+                                       :shape-index ..shape-index..}
+              target-location-component {:x target-x :y target-y :countdown -2}]
+          (-update-shape-location w ..dt.. ..cd..) => nil
+          (provided (query/all :CurrentShapeComponent
+                               :CollisionComponent
+                               :TargetLocationComponent) => ..q..
+                    (mock/query w ..q..) => [..eid..]
+                    (mock/component w ..eid.. :CollisionComponent) => {:collision? true}
+                    (mock/component w ..eid.. :CurrentShapeComponent) => current-shape-component
+                    (mock/component w ..eid.. :TargetLocationComponent) => target-location-component
+                    (tiles ..shape-name.. ..shape-index..) => ..tiles..
+                    (-freeze-shape w 0 0 ..tiles..) => nil
+                    (mock/remove-component w
+                                           ..eid..
+                                           :CurrentShapeComponent) => nil
+                    (mock/remove-component w
+                                           ..eid..
+                                           :TargetLocationComponent) => nil
                     (mock/remove-component w
                                            ..eid..
                                            :CollisionComponent) => nil))))
