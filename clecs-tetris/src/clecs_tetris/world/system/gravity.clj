@@ -23,7 +23,8 @@
         (world/set-component w
                              eid
                              :TargetLocationComponent
-                             {:x x :y (dec y) :countdown countdown}))))
+                             {:x x :y (dec y) :countdown countdown})
+        (world/remove-component w eid :CollisionComponent))))
   nil)
 
 
@@ -38,4 +39,5 @@
                                           countdown-duration)))]
     (system  {:name :gravity-system
               :process-fn process
-              :writes #{:TargetLocationComponent}})))
+              :writes #{:CollisionComponent
+                        :TargetLocationComponent}})))

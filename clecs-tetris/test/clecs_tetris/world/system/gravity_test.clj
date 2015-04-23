@@ -39,4 +39,7 @@
                                        :TargetLocationComponent
                                        {:x ..x..
                                         :y 6
-                                        :countdown ..ct..}) => anything)))
+                                        :countdown ..ct..}) => nil
+                  (mock/remove-component w
+                                         ..eid..
+                                         :CollisionComponent) => nil)))
