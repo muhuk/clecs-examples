@@ -116,12 +116,4 @@
                     (mock/component w ..eid.. :TargetLocationComponent) => target-location-component
                     (tiles ..shape-name.. ..shape-index..) => ..tiles..
                     (-freeze-shape w 0 0 ..tiles..) => nil
-                    (mock/remove-component w
-                                           ..eid..
-                                           :CurrentShapeComponent) => nil
-                    (mock/remove-component w
-                                           ..eid..
-                                           :TargetLocationComponent) => nil
-                    (mock/remove-component w
-                                           ..eid..
-                                           :CollisionComponent) => nil))))
+                    (mock/remove-entity w ..eid..) => nil))))

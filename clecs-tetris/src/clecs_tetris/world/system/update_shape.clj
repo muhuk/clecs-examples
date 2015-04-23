@@ -55,9 +55,7 @@
             (if collides?
               (do
                 (-freeze-shape w x y (tiles shape-name shape-index))
-                (world/remove-component w eid :CurrentShapeComponent)
-                (world/remove-component w eid :TargetLocationComponent)
-                (world/remove-component w eid :CollisionComponent))
+                (world/remove-entity w eid))
               (do
                 (world/set-component w
                                      eid
