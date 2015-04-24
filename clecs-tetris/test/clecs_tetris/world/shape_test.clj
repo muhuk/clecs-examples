@@ -3,6 +3,14 @@
             [midje.sweet :refer :all]))
 
 
+(fact "offset translates coordinates."
+      (offset [[3 4 ..tile-a..]
+               [4 4 ..tile-b..]]
+              5
+              7) => [[8 11 ..tile-a..]
+                     [9 11 ..tile-b..]])
+
+
 (facts "rotate-shape cycles through orientations."
        (rotate-shape "O" 0) => (first O)
        (rotate-shape "I" 0) => (second I)

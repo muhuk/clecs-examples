@@ -125,15 +125,19 @@
              "Z" Z})
 
 
-(def shape-bag
-  (let [shape-seq (list I J L O S T Z)]
-    (map rand-nth (mapcat shuffle (repeat shape-seq)))))
+(defn offset [coords x y]
+  (map (fn [[a b c]] [(+ a x) (+ b y) c]) coords))
 
 
 (defn rotate-shape [shape-name shape-index]
   (let [shape (get shapes shape-name)
         new-idx (mod (inc shape-index) (count shape))]
     (shape new-idx)))
+
+
+(def shape-bag
+  (let [shape-seq (list I J L O S T Z)]
+    (map rand-nth (mapcat shuffle (repeat shape-seq)))))
 
 
 (defn tiles [shape-name shape-index]

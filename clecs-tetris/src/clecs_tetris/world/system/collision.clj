@@ -1,6 +1,6 @@
 (ns clecs-tetris.world.system.collision
   (:require [clecs-tetris.world.glass :refer [find-glass-tile]]
-            [clecs-tetris.world.shape :refer [tiles with-coordinates]]
+            [clecs-tetris.world.shape :refer [offset tiles with-coordinates]]
             [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as world]))
@@ -13,13 +13,10 @@
                           (with-coordinates)
                           (filter #(= (get % 2) "filled"))
                           (map (juxt first second)))
-        {target-x :x
-         target-y :y} (world/component w
+        {:keys [x y]} (world/component w
                                        eid
                                        :TargetLocationComponent)
-        coords (map (fn [[x y] [tx ty]] [(+ x tx) (+ y ty)])
-                    local-coords
-                    (repeat [target-x target-y]))]
+        coords (offset local-coords x y)]
     (true? (some (fn [[x y]]
                    (or (neg? y)
                        (let [{:keys [tile-type]} (world/component w

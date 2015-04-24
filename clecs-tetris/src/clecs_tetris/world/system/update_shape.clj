@@ -1,27 +1,30 @@
 (ns clecs-tetris.world.system.update-shape
   (:require [clecs-tetris.world.glass :refer [find-glass-tile]]
-            [clecs-tetris.world.shape :refer [tiles with-coordinates]]
+            [clecs-tetris.world.shape :refer [offset tiles with-coordinates]]
             [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as world]))
 
 
 (declare -move-shape
-         -set-glass-tile)
+         -set-glass-tile
+         only-filled)
 
+
+(defn- only-filled [tiles]
+  (filter #(= (nth % 2) "filled") (with-coordinates tiles)))
 
 (defn -freeze-shape [w x y tiles]
-  (let [only-filled (filter #(= (nth % 2) "filled") (with-coordinates tiles))]
-    (doseq [[tile-x tile-y _] only-filled]
-      (-set-glass-tile w (+ x tile-x) (+ y tile-y) "filled"))))
+  (doseq [[x y _] (-> tiles (only-filled) (offset x y))]
+      (-set-glass-tile w x y "filled")))
 
 
 (defn -move-shape [w [old-x old-y] [x y] tiles]
-  (let [only-filled (filter #(= (nth % 2) "filled") (with-coordinates tiles))]
-    (doseq [[tile-x tile-y _] only-filled]
-      (-set-glass-tile w (+ old-x tile-x) (+ old-y tile-y) "empty"))
-    (doseq [[tile-x tile-y _] only-filled]
-      (-set-glass-tile w (+ x tile-x) (+ y tile-y) "moving"))
+  (let [filled-tiles (only-filled tiles)]
+    (doseq [[x y _] (offset filled-tiles old-x old-y)]
+      (-set-glass-tile w x y "empty"))
+    (doseq [[x y _] (offset filled-tiles x y)]
+      (-set-glass-tile w x y "moving"))
     nil))
 
 
