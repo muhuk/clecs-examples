@@ -1,5 +1,6 @@
 (ns clecs-tetris.world.system.rendering
   (:require [clecs-tetris.world.protocol :as protocol]
+            [clecs-tetris.world.shape :refer [tiles]]
             [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as world]))
@@ -8,8 +9,8 @@
 (defn -get-next-shape [w]
   (let [q (query/all :NextShapeComponent)
         [eid] (world/query w q)
-        shape (world/component w eid :NextShapeComponent)]
-    (:tiles shape)))
+        {:keys [shape-name shape-index]} (world/component w eid :NextShapeComponent)]
+    (tiles shape-name shape-index)))
 
 
 (defn -get-stats [w]

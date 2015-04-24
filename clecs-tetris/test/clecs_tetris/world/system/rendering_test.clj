@@ -1,5 +1,6 @@
 (ns clecs-tetris.world.system.rendering-test
   (:require [clecs-tetris.world.system.rendering :refer :all]
+            [clecs-tetris.world.shape :refer [tiles]]
             [clecs.query :as query]
             [clecs.test.mock :as mock]
             [midje.sweet :refer :all]))
@@ -10,7 +11,9 @@
         (-get-next-shape w) => ..tiles..
         (provided (query/all :NextShapeComponent) => ..q..
                   (mock/query w ..q..) => [..eid..]
-                  (mock/component w ..eid.. :NextShapeComponent) => {:tiles ..tiles..})))
+                  (mock/component w ..eid.. :NextShapeComponent) => {:shape-name ..shape-name..
+                                                                     :shape-index ..shape-index..}
+                  (tiles ..shape-name.. ..shape-index..) => ..tiles..)))
 
 
 (fact "-get-stats returns level, score and lines."
