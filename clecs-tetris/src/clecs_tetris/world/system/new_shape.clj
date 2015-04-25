@@ -6,7 +6,7 @@
 
 (defn -can-create-new-shape? [w]
   (and (empty? (world/query w (query/all :CurrentShapeComponent
-                                         :TargetLocationComponent)))
+                                         :ShapeTargetComponent)))
        (not (empty? (world/query w (query/all :NextShapeComponent))))))
 
 
@@ -24,8 +24,11 @@
                           :shape-index shape-index})
     (world/set-component w
                          current-shape-eid
-                         :TargetLocationComponent
-                         {:x x :y y :countdown countdown-duration})
+                         :ShapeTargetComponent
+                         {:shape-index shape-index
+                          :x x
+                          :y y
+                          :countdown countdown-duration})
     (world/remove-entity w next-shape-eid)))
 
 
@@ -36,4 +39,4 @@
                            (-create-new-shape w x y countdown-duration)))
            :writes #{:CurrentShapeComponent
                      :NextShapeComponent
-                     :TargetLocationComponent}}))
+                     :ShapeTargetComponent}}))

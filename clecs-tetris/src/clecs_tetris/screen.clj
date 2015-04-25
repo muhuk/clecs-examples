@@ -1,10 +1,12 @@
 (ns clecs-tetris.screen
   (:require [clecs-tetris.world.protocol :refer [IScreen]]
             [seesaw.core :refer :all]
-            [seesaw.graphics :as g]))
+            [seesaw.graphics :as g]
+            [seesaw.keymap :refer [map-key]]))
 
 
-(declare draw-tile
+(declare configure-keys
+         draw-tile
          make-side-panel
          make-tile-canvas
          paint-glass)
@@ -22,17 +24,28 @@
           (repaint! f)))
 
 
-(defn make-screen [tile-size]
-  (let [f (frame :title "clecs-tetris")
-        tiles (atom nil)
+(defn make-screen [tile-size event-queue]
+  (let [tiles (atom nil)
         next-shape (atom nil)
         glass (make-tile-canvas tiles 10 20 tile-size)
         panel (border-panel :center glass
                             :east (make-side-panel next-shape tile-size))]
     (native!)
-    (config! f :content panel)
-    (-> f pack! show!)
-    (Screen. f tiles next-shape)))
+    (-> (frame :title "clecs-tetris")
+        (configure-keys event-queue)
+        (config! :content panel)
+        (pack!)
+        (show!)
+        (Screen. tiles next-shape))))
+
+
+(defn- configure-keys [frame event-queue]
+  (doseq [key-code ["ESCAPE" "UP" "DOWN" "LEFT" "RIGHT"]]
+    (map-key frame
+             key-code
+             (fn [_] (swap! event-queue conj [:keyboard-event key-code]))
+             :scope :global))
+  frame)
 
 
 (defn- draw-tile [g2d tile]

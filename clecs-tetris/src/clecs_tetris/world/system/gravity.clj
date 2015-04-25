@@ -16,14 +16,17 @@
 
 
 (defn -move-target-location [w]
-  (let [q (query/all :TargetLocationComponent)
+  (let [q (query/all :ShapeTargetComponent)
         [eid] (world/query w q)]
     (when eid
-      (let [{:keys [x y countdown]} (world/component w eid :TargetLocationComponent)]
+      (let [{:keys [shape-index x y countdown]} (world/component w eid :ShapeTargetComponent)]
         (world/set-component w
                              eid
-                             :TargetLocationComponent
-                             {:x x :y (dec y) :countdown countdown})
+                             :ShapeTargetComponent
+                             {:shape-index shape-index
+                              :x x
+                              :y (dec y)
+                              :countdown countdown})
         (world/remove-component w eid :CollisionComponent))))
   nil)
 
@@ -40,4 +43,4 @@
     (system  {:name :gravity-system
               :process-fn process
               :writes #{:CollisionComponent
-                        :TargetLocationComponent}})))
+                        :ShapeTargetComponent}})))

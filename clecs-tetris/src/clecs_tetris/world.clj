@@ -4,6 +4,8 @@
             [clecs-tetris.world.shape :refer [shape-bag]]
             [clecs-tetris.world.system.collision :refer [collision-system]]
             [clecs-tetris.world.system.gravity :refer [make-gravity-system]]
+            [clecs-tetris.world.system.input :refer [make-input-system]]
+            [clecs-tetris.world.system.move-shape :refer [move-shape-system]]
             [clecs-tetris.world.system.new-shape :refer [make-new-shape-system]]
             [clecs-tetris.world.system.next-shape :refer [make-next-shape-system]]
             [clecs-tetris.world.system.rendering :refer [make-rendering-system]]
@@ -13,6 +15,7 @@
 
 
 (defn make-world [& {:keys [default-tile
+                            event-queue
                             glass-height
                             glass-width
                             gravity-countdown
@@ -23,6 +26,8 @@
                                       :glass-width glass-width)
         systems [collision-system
                  (make-gravity-system gravity-countdown)
+                 (make-input-system event-queue)
+                 move-shape-system
                  (make-new-shape-system (/ (- glass-width 4) 2)
                                                 glass-height
                                                 update-shape-countdown-duration)

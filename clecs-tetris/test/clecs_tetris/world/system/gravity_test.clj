@@ -20,24 +20,26 @@
 (fact "-move-target-location does nothing if there's no current shape."
       (let [w (mock/mock-editable-world)]
         (-move-target-location w) => nil
-        (provided (query/all :TargetLocationComponent) => ..q..
+        (provided (query/all :ShapeTargetComponent) => ..q..
                   (mock/query w ..q..) => [])))
 
 
 (fact "-move-target-location moves target location down."
       (let [w (mock/mock-editable-world)]
         (-move-target-location w) => nil
-        (provided (query/all :TargetLocationComponent) => ..q..
+        (provided (query/all :ShapeTargetComponent) => ..q..
                   (mock/query w ..q..) => [..eid..]
                   (mock/component w
                                   ..eid..
-                                  :TargetLocationComponent) => {:x ..x..
-                                                                :y 7
-                                                                :countdown ..ct..}
+                                  :ShapeTargetComponent) => {:shape-index ..shape-index..
+                                                             :x ..x..
+                                                             :y 7
+                                                             :countdown ..ct..}
                   (world/set-component w
                                        ..eid..
-                                       :TargetLocationComponent
-                                       {:x ..x..
+                                       :ShapeTargetComponent
+                                       {:shape-index ..shape-index..
+                                        :x ..x..
                                         :y 6
                                         :countdown ..ct..}) => nil
                   (mock/remove-component w

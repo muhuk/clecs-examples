@@ -10,7 +10,7 @@
       (let [w (mock/mock-editable-world)]
         (-can-create-new-shape? w) => anything
         (provided (query/all :CurrentShapeComponent
-                             :TargetLocationComponent) => ..q..
+                             :ShapeTargetComponent) => ..q..
                   (mock/query w ..q..) => [..eid..])))
 
 
@@ -18,7 +18,7 @@
       (let [w (mock/mock-editable-world)]
         (-can-create-new-shape? w) => anything
         (provided (query/all :CurrentShapeComponent
-                             :TargetLocationComponent) => ..q1..
+                             :ShapeTargetComponent) => ..q1..
                   (mock/query w ..q1..) => nil
                   (query/all :NextShapeComponent) => ..q2..
                   (mock/query w ..q2..) => nil)))
@@ -43,8 +43,9 @@
                                         :shape-index ..shape-index..}) => anything
                   (world/set-component w
                                        ..eid2..
-                                       :TargetLocationComponent
-                                       {:x ..x..
+                                       :ShapeTargetComponent
+                                       {:shape-index ..shape-index..
+                                        :x ..x..
                                         :y ..y..
                                         :countdown ..cd..}) => anything
                   (mock/remove-entity w ..eid1..) => anything)))

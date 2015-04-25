@@ -1,6 +1,6 @@
 (ns clecs-tetris.world.system.rendering-test
-  (:require [clecs-tetris.world.system.rendering :refer :all]
-            [clecs-tetris.world.shape :refer [tiles]]
+  (:require [clecs-tetris.world.shape :refer [tiles]]
+            [clecs-tetris.world.system.rendering :refer :all]
             [clecs.query :as query]
             [clecs.test.mock :as mock]
             [midje.sweet :refer :all]))

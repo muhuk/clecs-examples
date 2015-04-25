@@ -7,8 +7,9 @@
 
 (fact "init initializes a world."
       (:world (init)) => ..world..
-      (provided (make-screen anything) => ..screen..
+      (provided (make-screen anything anything) => ..screen..
                 (make-world :default-tile anything
+                            :event-queue anything
                             :glass-height anything
                             :glass-width anything
                             :gravity-countdown anything
@@ -18,8 +19,9 @@
 
 (fact "init returns an escape hatch."
       (-> (init) :escape-hatch type supers) => (contains [clojure.lang.IPending])
-      (provided (make-screen anything) => ..screen..
+      (provided (make-screen anything anything) => ..screen..
                 (make-world :default-tile anything
+                            :event-queue anything
                             :glass-height anything
                             :glass-width anything
                             :gravity-countdown anything

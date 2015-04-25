@@ -15,7 +15,7 @@
                           (map (juxt first second)))
         {:keys [x y]} (world/component w
                                        eid
-                                       :TargetLocationComponent)
+                                       :ShapeTargetComponent)
         coords (offset local-coords x y)]
     (true? (some (fn [[x y]]
                    (or (neg? y)
@@ -28,7 +28,7 @@
 
 (defn -collision-entities [w]
   (->> (query/all :CurrentShapeComponent
-                  :TargetLocationComponent)
+                  :ShapeTargetComponent)
        (world/query w)
        (filter (fn [eid]
                  (nil? (world/component w eid :CollisionComponent))))))
@@ -45,5 +45,5 @@
                                                   {:collision? (-collides? w eid)}))))
            :reads #{:CurrentShapeComponent
                     :GlassTileComponent
-                    :TargetLocationComponent}
+                    :ShapeTargetComponent}
            :writes #{:CollisionComponent}}))

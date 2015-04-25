@@ -23,7 +23,7 @@
                                                     [1 1 "empty"]]
                    (mock/component w
                                    ..eid..
-                                   :TargetLocationComponent) => {:x 3 :y 4}
+                                   :ShapeTargetComponent) => {:x 3 :y 4}
                    (find-glass-tile w 4 4) => ..glass-eid-1..
                    (mock/component w
                                    ..glass-eid-1..
@@ -44,7 +44,7 @@
                                                     [1 1 "empty"]]
                    (mock/component w
                                    ..eid..
-                                   :TargetLocationComponent) => {:x 3 :y 4}
+                                   :ShapeTargetComponent) => {:x 3 :y 4}
                    (find-glass-tile w 4 4) => ..glass-eid-1..
                    (mock/component w
                                    ..glass-eid-1..
@@ -68,14 +68,14 @@
                   (with-coordinates ..tiles..) => [[0 0 "filled"]]
                   (mock/component w
                                   ..eid..
-                                  :TargetLocationComponent) => {:x 5 :y -1})))
+                                  :ShapeTargetComponent) => {:x 5 :y -1})))
 
 
 (fact "-collision-entities returns a sequence of entities to check for collision."
       (let [w (mock/mock-editable-world)]
         (-collision-entities w) => [..a.. ..c..]
         (provided (query/all :CurrentShapeComponent
-                             :TargetLocationComponent) => ..q..
+                             :ShapeTargetComponent) => ..q..
                   (mock/query w ..q..) => [..a.. ..b.. ..c..]
                   (mock/component w ..a.. :CollisionComponent) => nil
                   (mock/component w ..b.. :CollisionComponent) => anything

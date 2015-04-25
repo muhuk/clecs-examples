@@ -8,14 +8,17 @@
 
 
 (defn init []
-  (let [screen (make-screen 30)]
+  (let [escape-hatch (promise)
+        event-queue (atom [])
+        screen (make-screen 30 event-queue)]
     {:world (make-world :default-tile "empty"
+                        :event-queue event-queue
                         :glass-height 20
                         :glass-width 10
                         :gravity-countdown 1000
                         :screen screen
                         :update-shape-countdown-duration 50)
-     :escape-hatch (promise)}))
+     :escape-hatch escape-hatch}))
 
 
 (defn make-timer []

@@ -8,24 +8,8 @@
 
 (declare -move-shape
          -set-glass-tile
-         only-filled)
-
-
-(defn- only-filled [tiles]
-  (filter #(= (nth % 2) "filled") (with-coordinates tiles)))
-
-(defn -freeze-shape [w x y tiles]
-  (doseq [[x y _] (-> tiles (only-filled) (offset x y))]
-      (-set-glass-tile w x y "filled")))
-
-
-(defn -move-shape [w [old-x old-y] [x y] tiles]
-  (let [filled-tiles (only-filled tiles)]
-    (doseq [[x y _] (offset filled-tiles old-x old-y)]
-      (-set-glass-tile w x y "empty"))
-    (doseq [[x y _] (offset filled-tiles x y)]
-      (-set-glass-tile w x y "moving"))
-    nil))
+         only-filled
+         set-tiles)
 
 
 (defn -set-glass-tile [w x y tile]
@@ -34,20 +18,27 @@
   nil)
 
 
+(defn -set-tiles [w tiles x y tile]
+  (doseq [[x y _] (-> tiles (only-filled) (offset x y))]
+      (-set-glass-tile w x y tile)))
+
+
 (defn -update-shape-location [w dt countdown-duration]
   (let [q (query/all :CurrentShapeComponent
                      :CollisionComponent
-                     :TargetLocationComponent)]
+                     :ShapeTargetComponent)]
     (when-let [[eid] (world/query w q)]
       (let [{target-x :x
              target-y :y
-             cd :countdown} (world/component w eid :TargetLocationComponent)]
+             target-shape-index :shape-index
+             cd :countdown
+             :as target-shape-component} (world/component w eid :ShapeTargetComponent)]
         (if (pos? cd)
           ;; Countdown is positive => decrement it.
           (world/set-component w
                                eid
-                               :TargetLocationComponent
-                               {:x target-x :y target-y :countdown (- cd dt)})
+                               :ShapeTargetComponent
+                               (assoc target-shape-component :countdown (- cd dt)))
           ;; Countdown is not positive => try to move the shape.
           (let [{collides? :collision?} (world/component w eid :CollisionComponent)
                 {:keys [x
@@ -57,7 +48,7 @@
                  :as current-shape} (world/component w eid :CurrentShapeComponent)]
             (if collides?
               (do
-                (-freeze-shape w x y (tiles shape-name shape-index))
+                (-set-tiles w (tiles shape-name shape-index) x y "filled")
                 (world/remove-entity w eid))
               (do
                 (world/set-component w
@@ -65,15 +56,14 @@
                                      :CurrentShapeComponent
                                      (assoc current-shape
                                        :x target-x
-                                       :y target-y))
-                (-move-shape w
-                             [x y]
-                             [target-x target-y]
-                             (tiles shape-name shape-index))
+                                       :y target-y
+                                       :shape-index target-shape-index))
+                (-set-tiles w (tiles shape-name shape-index) x y "empty")
+                (-set-tiles w (tiles shape-name target-shape-index) target-x target-y "moving")
                 (world/set-component w
                                      eid
-                                     :TargetLocationComponent
-                                     {:x target-x :y target-y :countdown countdown-duration})
+                                     :ShapeTargetComponent
+                                     (assoc target-shape-component :countdown countdown-duration))
                 (world/remove-component w eid :CollisionComponent)))))))))
 
 
@@ -84,4 +74,8 @@
            :writes #{:CurrentShapeComponent
                      :CollisionComponent
                      :GlassTileComponent
-                     :TargetLocationComponent}}))
+                     :ShapeTargetComponent}}))
+
+
+(defn- only-filled [tiles]
+  (filter #(= (nth % 2) "filled") (with-coordinates tiles)))
