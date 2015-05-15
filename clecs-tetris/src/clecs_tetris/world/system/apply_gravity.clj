@@ -1,4 +1,4 @@
-(ns clecs-tetris.world.system.gravity
+(ns clecs-tetris.world.system.apply-gravity
   (:require [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as world]))
@@ -31,7 +31,7 @@
   nil)
 
 
-(defn make-gravity-system [countdown-duration]
+(defn make-apply-gravity-system [countdown-duration]
   ;; TODO: Use scheduling when its implemented.
   (let [countdown-value (atom countdown-duration)
         process (fn [w dt]

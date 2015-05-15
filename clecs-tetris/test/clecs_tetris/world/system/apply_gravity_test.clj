@@ -1,5 +1,5 @@
-(ns clecs-tetris.world.system.gravity-test
-  (:require [clecs-tetris.world.system.gravity :refer :all]
+(ns clecs-tetris.world.system.apply-gravity-test
+  (:require [clecs-tetris.world.system.apply-gravity :refer :all]
             [clecs.query :as query]
             [clecs.test.mock :as mock]
             [clecs.world :as world]
