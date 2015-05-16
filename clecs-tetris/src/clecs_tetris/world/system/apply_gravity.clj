@@ -4,15 +4,32 @@
             [clecs.world :as world]))
 
 
-(declare -move-target-location)
+(declare -get-gravity
+         -move-target-location)
 
 
-(defn -apply-gravity [w dt countdown-value countdown-duration]
-  (if (pos? countdown-value)
-    (- countdown-value dt)
-    (do
-      (-move-target-location w)
-      countdown-duration)))
+(defn -apply-gravity [w dt]
+  (let [{countdown-value :countdown
+         countdown-duration :acceleration
+         eid :gravity-eid :as c} (-get-gravity w)
+        new-countdown-value (if (pos? countdown-value)
+                              (- countdown-value dt)
+                              (do
+                                (-move-target-location w)
+                                countdown-duration))]
+    (world/set-component w
+                         eid
+                         :GravityComponent
+                         (-> c
+                             (dissoc :gravity-eid)
+                             (assoc :countdown new-countdown-value)))
+    nil))
+
+
+(defn -get-gravity [w]
+  (let [[eid] (world/query w (query/all :GravityComponent))]
+    (assoc (world/component w eid :GravityComponent)
+      :gravity-eid eid)))
 
 
 (defn -move-target-location [w]
@@ -31,16 +48,9 @@
   nil)
 
 
-(defn make-apply-gravity-system [countdown-duration]
-  ;; TODO: Use scheduling when its implemented.
-  (let [countdown-value (atom countdown-duration)
-        process (fn [w dt]
-                  (swap! countdown-value
-                         #(-apply-gravity w
-                                          dt
-                                          %
-                                          countdown-duration)))]
-    (system  {:name :gravity-system
-              :process-fn process
+(def apply-gravity-system
+  (system  {:name :gravity-system
+              :process-fn -apply-gravity
               :writes #{:CollisionComponent
-                        :ShapeTargetComponent}})))
+                        :GravityComponent
+                        :ShapeTargetComponent}}))

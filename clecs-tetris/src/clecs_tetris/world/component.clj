@@ -12,6 +12,9 @@
                  (component :GlassTileComponent {:x Integer
                                                  :y Integer
                                                  :tile-type String})
+                 (component :GravityComponent {:acceleration Integer
+                                               :acceleration-countdown Integer
+                                               :countdown Integer})
                  (component :KeyboardInputEvent {:id Integer
                                                  :key-code String})
                  (component :LevelComponent {:level Integer})

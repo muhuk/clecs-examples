@@ -8,13 +8,39 @@
 
 
 (fact "-apply-gravity decrements countdown if it's still positive."
-      (-apply-gravity ..w.. 44 123 ..cd..) => 79)
+      (-apply-gravity ..w.. 44) => nil
+      (provided (-get-gravity ..w..) => {:countdown 123
+                                         :acceleration ..cd..
+                                         :gravity-eid ..eid..}
+                (world/set-component ..w..
+                                     ..eid..
+                                     :GravityComponent
+                                     {:countdown 79
+                                      :acceleration ..cd..}) => irrelevant))
 
 
 (fact "-apply-gravity runs -move-target-location transaction and resets countdown."
+      (-apply-gravity ..w.. 17) => nil
+      (provided (-get-gravity ..w..) => {:countdown -3
+                                         :acceleration ..cd..
+                                         :gravity-eid ..eid..}
+                (-move-target-location ..w..) => anything
+                (world/set-component ..w..
+                                     ..eid..
+                                     :GravityComponent
+                                     {:countdown ..cd..
+                                      :acceleration ..cd..}) => irrelevant))
+
+
+(fact "-get-gravity."
       (let [w (mock/mock-editable-world)]
-        (-apply-gravity w 17 -3 ..cd..) => ..cd..
-        (provided (-move-target-location w ) => anything)))
+        (-get-gravity w) => {:countdown ..ct..
+                             :acceleration ..acc..
+                             :gravity-eid ..eid..}
+        (provided (query/all :GravityComponent) => ..q..
+                  (mock/query w ..q..) => [..eid..]
+                  (mock/component w ..eid.. :GravityComponent) => {:countdown ..ct..
+                                                                   :acceleration ..acc..})))
 
 
 (fact "-move-target-location does nothing if there's no current shape."
