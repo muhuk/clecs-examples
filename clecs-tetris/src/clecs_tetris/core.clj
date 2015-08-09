@@ -12,6 +12,7 @@
         event-queue (atom [])
         screen (make-screen 30 event-queue)]
     {:world (make-world :default-tile "empty"
+                        :escape-hatch escape-hatch
                         :event-queue event-queue
                         :glass-height 20
                         :glass-width 10
@@ -47,4 +48,5 @@
 (defn -main
   [& args]
   (-> (init)
-      (run)))
+      (run))
+  (System/exit 0))

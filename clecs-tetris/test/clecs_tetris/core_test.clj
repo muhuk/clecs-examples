@@ -9,6 +9,7 @@
       (:world (init)) => ..world..
       (provided (make-screen anything anything) => ..screen..
                 (make-world :default-tile anything
+                            :escape-hatch anything
                             :event-queue anything
                             :glass-height anything
                             :glass-width anything
@@ -21,6 +22,7 @@
       (-> (init) :escape-hatch type supers) => (contains [clojure.lang.IPending])
       (provided (make-screen anything anything) => ..screen..
                 (make-world :default-tile anything
+                            :escape-hatch anything
                             :event-queue anything
                             :glass-height anything
                             :glass-width anything

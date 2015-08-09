@@ -9,6 +9,7 @@
             [clecs-tetris.world.system.move-shape :refer [move-shape-system]]
             [clecs-tetris.world.system.new-shape :refer [make-new-shape-system]]
             [clecs-tetris.world.system.next-shape :refer [make-next-shape-system]]
+            [clecs-tetris.world.system.quit :refer [make-quit-system]]
             [clecs-tetris.world.system.rendering :refer [make-rendering-system]]
             [clecs-tetris.world.system.update-shape :refer [make-update-shape-system]]
             [clecs.backend.atom-world :refer [atom-world-factory]]
@@ -16,6 +17,7 @@
 
 
 (defn make-world [& {:keys [default-tile
+                            escape-hatch
                             event-queue
                             glass-height
                             glass-width
@@ -34,6 +36,7 @@
                                                 glass-height
                                                 update-shape-countdown-duration)
                  (make-next-shape-system shape-bag)
+                 (make-quit-system escape-hatch)
                  (make-rendering-system screen)
                  (make-update-shape-system update-shape-countdown-duration)]
         w (world/world atom-world-factory
