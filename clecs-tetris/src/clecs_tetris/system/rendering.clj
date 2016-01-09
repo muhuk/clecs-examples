@@ -1,4 +1,4 @@
-(ns clecs-tetris.world.system.rendering
+(ns clecs-tetris.system.rendering
   (:require [clecs-tetris.world.protocol :as protocol]
             [clecs-tetris.world.shape :refer [tiles]]
             [clecs.query :as query]

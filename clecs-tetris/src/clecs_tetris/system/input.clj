@@ -1,4 +1,4 @@
-(ns clecs-tetris.world.system.input
+(ns clecs-tetris.system.input
   (:require [clecs.system :refer [system]]
             [clecs.world :as world]))
 

@@ -1,9 +1,9 @@
 (ns clecs-tetris.world
-  (:require [clecs-tetris.world.init :refer [make-initializer]]
+  (:require [clecs-tetris.system.input :refer [make-input-system]]
+            [clecs-tetris.system.quit :refer [make-quit-system]]
+            [clecs-tetris.system.rendering :refer [make-rendering-system]]
+            [clecs-tetris.world.init :refer [make-initializer]]
             [clecs-tetris.world.shape :refer [shape-bag]]
-            [clecs-tetris.world.system.input :refer [make-input-system]]
-            [clecs-tetris.world.system.quit :refer [make-quit-system]]
-            [clecs-tetris.world.system.rendering :refer [make-rendering-system]]
             [clecs.backend.atom-world :refer [atom-world-factory]]
             [clecs.component :refer [component]]
             [clecs.world :as world]))

@@ -1,4 +1,4 @@
-(ns clecs-tetris.world.system.quit
+(ns clecs-tetris.system.quit
   (:require [clecs.query :as query]
             [clecs.system :refer [system]]
             [clecs.world :as world]))
