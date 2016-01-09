@@ -4,25 +4,10 @@
 
 
 
-(def components [(component :CurrentShapeComponent {:x Integer
-                                                    :y Integer
-                                                    :shape-name String
-                                                    :shape-index Integer})
-                 (component :CollisionComponent {:collision? Boolean})
-                 (component :GlassTileComponent {:x Integer
-                                                 :y Integer
-                                                 :tile-type String})
-                 (component :GravityComponent {:acceleration Integer
-                                               :acceleration-countdown Integer
-                                               :countdown Integer})
-                 (component :KeyboardInputEvent {:id Integer
-                                                 :key-code String})
-                 (component :LevelComponent {:level Integer})
-                 (component :LinesDroppedComponent {:lines Integer})
-                 (component :NextShapeComponent {:shape-name String
-                                                 :shape-index Integer})
-                 (component :ScoreComponent {:score Integer})
-                 (component :ShapeTargetComponent {:shape-index Integer
-                                                   :x Integer
-                                                   :y Integer
-                                                   :countdown Integer})])
+(def components
+  [(component :KeyboardInputEvent {:id Integer
+                                   :key-code String})
+   (component :LevelComponent {:level Integer})
+   (component :LinesDroppedComponent {:lines Integer})
+   (component :ScoreComponent {:score Integer})])
+
