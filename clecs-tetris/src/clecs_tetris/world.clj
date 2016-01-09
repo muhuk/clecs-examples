@@ -1,12 +1,20 @@
 (ns clecs-tetris.world
-  (:require [clecs-tetris.world.component :refer [components]]
-            [clecs-tetris.world.init :refer [make-initializer]]
+  (:require [clecs-tetris.world.init :refer [make-initializer]]
             [clecs-tetris.world.shape :refer [shape-bag]]
             [clecs-tetris.world.system.input :refer [make-input-system]]
             [clecs-tetris.world.system.quit :refer [make-quit-system]]
             [clecs-tetris.world.system.rendering :refer [make-rendering-system]]
             [clecs.backend.atom-world :refer [atom-world-factory]]
+            [clecs.component :refer [component]]
             [clecs.world :as world]))
+
+
+(def components
+  [(component :KeyboardInputEvent {:id Integer
+                                   :key-code String})
+   (component :LevelComponent {:level Integer})
+   (component :LinesDroppedComponent {:lines Integer})
+   (component :ScoreComponent {:score Integer})])
 
 
 (defn make-world [& {:keys [default-tile
