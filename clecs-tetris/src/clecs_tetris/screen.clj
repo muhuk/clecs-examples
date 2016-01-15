@@ -18,9 +18,9 @@
           (doseq [field [:level :lines :score]
                   :let [selector (keyword (str "#" (name field)))]]
             (-> (select f [selector])
-                (value! (field data)))
-            (reset! tiles (:tiles data))
-            (reset! next-shape (:next-shape data)))
+                (value! (field data))))
+          (reset! tiles (:tiles data))
+          (reset! next-shape (:next-shape data))
           (repaint! f)))
 
 
