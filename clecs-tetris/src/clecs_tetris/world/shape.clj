@@ -137,5 +137,4 @@
 
 
 (defn tiles [shape-name shape-index]
-  (:tiles (get-in shapes [shape-name shape-index])))
-
+  (get-in shapes [shape-name shape-index :tiles]))
