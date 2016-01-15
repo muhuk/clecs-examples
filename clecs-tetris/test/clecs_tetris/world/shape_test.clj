@@ -3,22 +3,14 @@
             [midje.sweet :refer :all]))
 
 
-(fact "offset translates coordinates."
-      (offset [[3 4 ..tile-a..]
-               [4 4 ..tile-b..]]
-              5
-              7) => [[8 11 ..tile-a..]
-                     [9 11 ..tile-b..]])
-
-
-(facts "rotate-shape cycles through orientations."
-       (rotate-shape "O" 0) => (first O)
-       (rotate-shape "I" 0) => (second I)
-       (rotate-shape "I" 1) => (first I)
-       (rotate-shape "T" 0) => (nth T 1)
-       (rotate-shape "T" 1) => (nth T 2)
-       (rotate-shape "T" 2) => (nth T 3)
-       (rotate-shape "T" 3) => (nth T 0))
+(facts "rotate cycles through orientations."
+       (rotate "O" 0) => (first O)
+       (rotate "I" 0) => (second I)
+       (rotate "I" 1) => (first I)
+       (rotate "T" 0) => (nth T 1)
+       (rotate "T" 1) => (nth T 2)
+       (rotate "T" 2) => (nth T 3)
+       (rotate "T" 3) => (nth T 0))
 
 
 (facts "Shapes have multiple orientations."
@@ -26,7 +18,7 @@
          (seq shape) =not=> nil?))
 
 
-(facts "Shapes have shape-name, index & 4x4 tile grids."
+(facts "Shapes have shape-name, index & 4 filled tiles each with x & y coordinates."
        (doseq [shape (vals shapes)
                orientation shape]
          (keys orientation) => (just #{:shape-name
@@ -35,7 +27,7 @@
          (:shape-name orientation) => string?
          (:shape-index orientation) => integer?
          (count (:tiles orientation)) => 4
-         (map count (:tiles orientation)) => [4 4 4 4]))
+         (map count (:tiles orientation)) => [2 2 2 2]))
 
 
 (fact "shape-bag generates shapes."

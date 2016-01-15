@@ -1,16 +1,16 @@
 (ns clecs-tetris.world.shape)
 
 
-(def ^:private legend {\. "empty"
-                       \# "filled"})
-
-
 (defn- make-shape [shape-name & tiles-strs]
-  (let [tiles (map #(->> (map legend %)
-                         (partition 4)
-                         (map vec)
-                         vec)
-                   tiles-strs)]
+  (let [coords-if-filled (fn
+                           [idx c]
+                           (when (= c \#)
+                             [(mod idx 4)
+                              (quot idx 4)]))
+        tiles (->> tiles-strs
+                   (map (partial keep-indexed coords-if-filled))
+                   (map vec)
+                   (vec))]
     (->> tiles
          (map-indexed (fn [idx tiles] {:shape-name shape-name
                                        :shape-index idx
@@ -125,11 +125,7 @@
              "Z" Z})
 
 
-(defn offset [coords x y]
-  (map (fn [[a b c]] [(+ a x) (+ b y) c]) coords))
-
-
-(defn rotate-shape [shape-name shape-index]
+(defn rotate [shape-name shape-index]
   (let [shape (get shapes shape-name)
         new-idx (mod (inc shape-index) (count shape))]
     (shape new-idx)))
@@ -143,13 +139,3 @@
 (defn tiles [shape-name shape-index]
   (:tiles (get-in shapes [shape-name shape-index])))
 
-
-(defn with-coordinates [tiles]
-  (let [rows (count tiles)
-        reverse-y #(- (dec rows) %)]
-    (->> tiles
-         (map-indexed (fn [y row]
-                        (map-indexed (fn [x tile]
-                                       [x (reverse-y y) tile])
-                                     row)))
-         (apply concat))))
